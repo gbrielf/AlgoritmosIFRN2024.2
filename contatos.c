@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-struct Contato {
+struct Telefone{
     char nome[50];
     char telefone[15];
 };
@@ -12,30 +12,71 @@ int menu(){
     return x;
 }
 
-struct Contato* inserir_contato(char nome[50], char telefone[15]){
-    struct Contato* contato = (struct Pessoa*) malloc(sizeof(struct Contato));
+struct Telefone* criar_telefone() {
+   struct Telefone* pessoa = (struct Telefone*) malloc(sizeof(struct Telefone));
+    
+   if (pessoa == NULL) {
+      printf("Erro ao alocar memória.\n");
+      return NULL; // Retorna NULL se a alocação falhar
+   }
 
-    strcpy(contato->nome, nome);
-    strcpy(*contato->telefone = telefone);
-
-    return contato;
-
+   printf("Digite o nome da pessoa:");
+    scanf("%s", pessoa->nome);
+   printf("Digite o número da pessoa:");
+    scanf("%s", pessoa->telefone);
+    
+   return pessoa;
 }
 
-struct Contato* excluir_contato(){
-
+void adicionar_contato(struct Telefone agenda[], int *num_de_contatos){
+   struct Telefone* novo_contato = criar_telefone();
+   if (novo_contato != NULL){
+      agenda[*num_de_contatos] = *novo_contato;
+      (*num_de_contatos)++;
+      free(novo_contato);
+   }
 }
 
-void listar_contato(Contato lista, int tamanho){
-    for(int i = 0; i < tamanho; i++)
+void excluir_contato(struct Telefone agenda[], int *num_de_contatos){
+   int opcao;
+   int indicedonumero;
+
+   printf("Contatos:\n");
+   for (int i = 0; i < *num_de_contatos-1; i++){
+      printf("%d - %s", i, agenda[i+1].nome);
+   }
+
+   printf("Deseja excluir um contato? 1 - sim / 2 - não");
+   scanf("%d", &opcao);
+
+   printf("Digite o índice do número a ser removido:");
+   scanf("%d", &indicedonumero);
+
+   if (indicedonumero < 0 || indicedonumero > *num_de_contatos){
+      printf("Índice inválido. \n");
+      return;
+   }
+   
+   for (int i = indicedonumero; i <  *num_de_contatos - 1; i++){
+      agenda[i] = agenda[i+1]; 
+   }
+   (*num_de_contatos)--;
 }
+
+void listar_contatos(struct Telefone agenda[], int num_de_contatos){
+   printf("Lista de contatos:\n");
+   for (int i = 0; i <= num_de_contatos; i++){
+      printf("%d - %s - %s", (i+1),  agenda[i].nome, agenda[i].telefone);
+   }
+}
+
  
 void sair(){
     printf("Finalizando o programa.");
 }
 
 int main() {
-    struct Contato agenda[100];
+    struct Telefone agenda[100];
     int num_contatos;
     int valor = 0;
 
