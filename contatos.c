@@ -1,16 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 struct Telefone{
     char nome[50];
     char telefone[15];
 };
 
-int menu(){
-    printf("Digite uma opção:\n 1 - Incluir contato \n 2 - Excluir contato \n 3 - Listar contatos \n 4 - Atualizar lista \n 5 - Sair");
-    int x;
-    scanf("%d", &x); 
-    return x;
-}
 
 struct Telefone* criar_telefone() {
    struct Telefone* pessoa = (struct Telefone*) malloc(sizeof(struct Telefone));
@@ -20,15 +15,24 @@ struct Telefone* criar_telefone() {
       return NULL; // Retorna NULL se a alocação falhar
    }
 
-   printf("Digite o nome da pessoa:");
+   printf("Digite o nome da pessoa:\n");
     scanf("%s", pessoa->nome);
-   printf("Digite o número da pessoa:");
+   printf("Digite o número da pessoa:\n");
     scanf("%s", pessoa->telefone);
     
    return pessoa;
 }
 
-void adicionar_contato(struct Telefone agenda[], int *num_de_contatos){
+int menu(){
+    printf("Digite uma opção:\n\n 1 - Incluir contato \n 2 - Excluir contato \n 3 - Listar contatos \n 4 - Atualizar lista \n 5 - Sair\n");
+    printf("\n");
+
+    int x;
+    scanf("%d", &x); 
+    return x;
+}
+
+void adicionar_contatos(struct Telefone agenda[], int *num_de_contatos){
    struct Telefone* novo_contato = criar_telefone();
    if (novo_contato != NULL){
       agenda[*num_de_contatos] = *novo_contato;
@@ -37,19 +41,19 @@ void adicionar_contato(struct Telefone agenda[], int *num_de_contatos){
    }
 }
 
-void excluir_contato(struct Telefone agenda[], int *num_de_contatos){
+void excluir_contatos(struct Telefone agenda[], int *num_de_contatos){
    int opcao;
    int indicedonumero;
 
    printf("Contatos:\n");
    for (int i = 0; i < *num_de_contatos-1; i++){
-      printf("%d - %s", i, agenda[i+1].nome);
+      printf("%d - %s\n", i, agenda[i+1].nome);
    }
 
-   printf("Deseja excluir um contato? 1 - sim / 2 - não");
+   printf("Deseja excluir um contato? 1 - sim / 2 - não\n");
    scanf("%d", &opcao);
 
-   printf("Digite o índice do número a ser removido:");
+   printf("Digite o índice do número a ser removido:\n");
    scanf("%d", &indicedonumero);
 
    if (indicedonumero < 0 || indicedonumero > *num_de_contatos){
@@ -65,14 +69,27 @@ void excluir_contato(struct Telefone agenda[], int *num_de_contatos){
 
 void listar_contatos(struct Telefone agenda[], int num_de_contatos){
    printf("Lista de contatos:\n");
-   for (int i = 0; i <= num_de_contatos; i++){
-      printf("%d - %s - %s", (i+1),  agenda[i].nome, agenda[i].telefone);
+   for (int i = 0; i < num_de_contatos; i++){
+      printf("%d - %s - %s\n", (i+1),  agenda[i].nome, agenda[i].telefone);
    }
+   printf("\n");
 }
 
+void atualizar_contato(struct Telefone agenda[100], int num_de_contatos){
+    int i = 0; 
+
+    listar_contatos( agenda, num_de_contatos);
+
+    printf("Digite o ID do contato a ser alterado:");
+    scanf("%d", &i);
+    i--;
+
+    printf("Digite o novo número:\n");
+    scanf("%s", agenda[i].telefone);
+}
  
 void sair(){
-    printf("Finalizando o programa.");
+    printf("Finalizando o programa.\n");
 }
 
 int main() {
@@ -80,39 +97,44 @@ int main() {
     int num_contatos;
     int valor = 0;
 
-    printf("Digite o número de contatos: ");
+    int *num_de_contatos = &num_contatos;
+
+    printf("Digite o número de contatos:\n ");
     scanf("%d", &num_contatos);
 
     for (int i = 0; i < num_contatos; i++) {
-        printf("Digite o nome do contato %d: ", i + 1);
+        printf("Digite o NOME do contato [%d]:\n", i + 1);
         scanf("%s", agenda[i].nome);
 
-        printf("Digite o telefone do contato %d: ", i + 1);
+        printf("Digite o TELEFONE do contato [%d]:\n", i + 1);
         scanf("%s", agenda[i].telefone);
+        printf("\n");
     }
 
+    printf("\n");
     printf("Contatos:\n");
 
     for (int i = 0; i < num_contatos; i++) {
         printf("Nome: %s\n", agenda[i].nome);
         printf("Telefone: %s\n", agenda[i].telefone);
     }
+    printf("\n");
 
     while (valor != 5){
         valor = menu();
 
         switch(valor){
             case 1:
-                inserir_contato(agenda->nome, agenda->telefone);
+                adicionar_contatos(agenda, num_de_contatos);
                 break;
             case 2:
-                excluir_contato(agenda);
+                excluir_contatos(agenda, num_de_contatos);
                 break;
             case 3:
-                listar_contato(agenda[100]);
+                listar_contatos(agenda, num_contatos);
                 break;
             case 4:
-                atualizar_lista();
+                atualizar_contato(agenda, num_contatos);
                 break;
             case 5:
                 sair();
