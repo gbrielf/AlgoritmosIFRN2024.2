@@ -28,46 +28,56 @@ class InsertionSort {
     }
 }
 
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String arg[]) throws IOException
+    {   
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
-
-     
-        System.out.print("Enter quantity of input values: ");
-        int lengthList = scanner.nextInt();
-        scanner.close();
-
         int value = 0;
 
-        while (value < 4) {
+        // Informações da Quantidade de Entradas e Nome do Arquivo
+        System.out.println("Enter quantity of input values: ");
+        int lengthList = scanner.nextInt();
+
+        scanner.close();
+
+        while(value < 4){
             int[] ordenedList = new int[lengthList];
 
-       
-            for (int i = 0; i < lengthList; i++) {
+            for(int i = 0; i < lengthList; i++)
+            {
+                // ordenedList.add(random.nextInt(lengthList)); // Adicionar n números aleatórios na lista
                 ordenedList[i] = random.nextInt(lengthList);
             }
 
             InsertionSort insertionsort = new InsertionSort(ordenedList, lengthList);
 
-            double start = System.nanoTime() / 1_000_000_000.0; // Convertendo para segundos
+            // Medir o Tempo de Processamento do Algoritmo Bubble Sort
+            double start = System.currentTimeMillis() / (double)1000;
             int[] sortedList = insertionsort.ordenedList();
-            double end = (System.nanoTime() / 1_000_000_000.0) - start; // Tempo decorrido
+            double end = (System.currentTimeMillis() / (double)1000) - start;
 
-         
-            String tempoFormatado = String.format("%.6f", end);
+            System.out.println(end);
 
-           
-            System.out.println("Tempo de execução: " + tempoFormatado + " segundos");
+            // Gravar as Informações em um Arquivo.txt
+            FileWriter file = new FileWriter("Insertionsort", true);
+            PrintWriter ffile = new PrintWriter(file);
 
-     
-            try (FileWriter file = new FileWriter("InsertionSort1000000.txt", true);
-                 PrintWriter ffile = new PrintWriter(file)) {
+            int break_ = 0;
 
-                ffile.println("LISTA DE VALORES ORDENADOS:");
-                for (int i = 0; i < lengthList; i++) {
-                    ffile.printf("%d ", sortedList[i]);
-                    if ((i + 1) % 20 == 0) {
-                        ffile.println(); 
-                    }
-                }
+            ffile.printf("LISTA DE VALORES ORDENADOS: \n");
+            for(int i = 0; i < lengthList; i++)
+            {
+                ffile.printf("%d ", sortedList[i]);
+                break_++;
+
+                if(break_ == 20){break_ = 0; ffile.printf("\n");}
+            }
+            ffile.printf("\nTEMPO: %.6f\n", end);
+
+            file.close();
+            value++;
+        }
+    }
+}
